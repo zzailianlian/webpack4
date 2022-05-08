@@ -1,0 +1,46 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+#root {
+  background: rgb(224, 246, 253);
+  padding: 0px;
+  /* background-image: url('./carbon.png'); */
+  background-size: cover;
+  display: flex;
+  backface-visibility: hidden;
+}
+
+@font-face {
+  font-family: "iconfont";
+  src: url('iconfont.woff2?t=1652007286504') format('woff2'),
+    url('iconfont.woff?t=1652007286504') format('woff'),
+    url('iconfont.ttf?t=1652007286504') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-bingtutubiao:before {
+  content: "\e98c";
+}
+
+.icon-chufang:before {
+  content: "\e98d";
+}
+
+.icon-chayan:before {
+  content: "\e98e";
+}
+
+.icon-erweima:before {
+  content: "\e98f";
+}

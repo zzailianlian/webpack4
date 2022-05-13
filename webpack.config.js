@@ -1,7 +1,12 @@
 
-const { resolve } = require('path')
+const webpack = require('webpack')
+const { resolve, dirname } = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const WorkboxWebpackPlugn = require('workbox-webpack-plugin')
+const AddAssetHtmlWebpackPlugin = require("add-asset-html-webpack-plugin")
 
 // 定义node环境 => 其中一个目的是试用合适兼容范围的postcss兼容标准
 process.env.NODE_ENV = 'development'
@@ -12,22 +17,23 @@ module.exports = {
   entry: './src/js/index.js',
   output: {
     // 将文件名和contenthash关联上，可以有效利用缓存
-    filename: 'js/[name]_[contenthash].js',
+    filename: 'js/[name].js',
+    // filename: 'js/[name]_[contenthash].js',
     path: resolve(__dirname, 'dist'),
     // publicPath: '/'
   },
   module: {
     rules: [
       // eslint，可以跟package.json中配置的eslingConfig相互作用，可以依赖业界比较权威的airbnb的标准来做代码检查
-      {
-        test: /\.js$/,
-        loader: 'eslint-loader',
-        exclude: /node_modules/,
-        options: {
-          // 检查到代码语法错误之后自动修复
-          fix: true
-        }
-      },
+      // {
+      //   test: /\.js$/,
+      //   loader: 'eslint-loader',
+      //   exclude: /node_modules/,
+      //   options: {
+      //     // 检查到代码语法错误之后自动修复
+      //     fix: true
+      //   }
+      // },
       // oneOf：要求每个文件都只匹配一个规则，避免了每个文件都有走test/include/exclude的校验过程，加快打包速度
       {
         oneOf: [
@@ -133,25 +139,63 @@ module.exports = {
     ]
   },
   plugins: [
+    // 输出到dist前清空dist目录
+    new CleanWebpackPlugin(),
+    // 指定HTML问价模板，自动引入相应的script和link、style标签
     new HtmlWebpackPlugin({
-      template: 'src/index.html'
+      template: 'src/index.html',
+      minify: {
+        // 干掉html中的注释
+        removeComments: true,
+        // 干掉html的空格、换行
+        collapseWhitespace: true,
+      }
     }),
+    // 提取css样式文件到指定输出目录的单独css文件
     new MiniCssExtractPlugin({
       filename: 'css/[name]_[contenthash].css'
+    }),
+    // 压缩css样式文件
+    new OptimizeCssAssetsWebpackPlugin(),
+    // 生成workserver.js文件，帮助用户在离线时可以拉取workserver.js中的数据
+    new WorkboxWebpackPlugn.GenerateSW({
+      clientsClaim: true,
+      skipWaiting: true
+    }),
+    // 将dll的静态资源通过manifest.json文件做映射
+    new webpack.DllReferencePlugin({
+      manifest: resolve(__dirname, 'dll/manifest.json')
+    }),
+    // 将静态资源自动导入到html文件中，这里主要用于dll资源
+    new AddAssetHtmlWebpackPlugin({
+      filepath: resolve(__dirname, 'dll/jquery.js'),
     })
   ],
   // mode: 'production',
   mode: 'development',
+  externals: {
+    // 将dayjsexternals掉，这个时候webpack 
+    // import的时候如果看到是dayjs，则不会打包进入，这时候需要我们手动将dayjs的cdn引入到html中。
+    // 注意：externals之后，就算在项目中是明确写了 import dayjs from 'dayjs'，也依然不会打包
+    // key:value key是给我们自己看的，知道要external的是什么包，value是包export的值，例如：module.exports = jQuery
+    'dayjs': 'dayjs',
+  },
   devtool: 'source-map',
+  // 默认使用webpackd的代码分割方案，如果多个组件引入组件库，超出一定大小，会默认抽离出单独的chunk包
+  optimization: {
+    splitChunks: {
+      chunks: 'all'
+    }
+  },
   devServer: {
     contentBase: resolve(__dirname, 'dist'),
     // 开启gzip压缩
     compress: true,
     // open: true,
-    hot: true,
-    port: 3000,
+    // hot: true,
+    port: 5000,
     quiet: true,
     // watchContentBase: true,
-    clientLogLevel: 'none'
+    // clientLogLevel: 'none'
   }
 }

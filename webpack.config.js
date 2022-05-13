@@ -109,29 +109,34 @@ module.exports = {
 
           {
             test: /\.js$/,
-            loader: 'babel-loader',
             exclude: /node_modules/,
-            options: {
-              cacheDirectory: true,
-              presets: [
-                ['@babel/preset-env',
-                  {
-                    // 按需加载babel的polyfill
-                    useBuiltIns: 'usage',
-                    corejs: {
-                      version: 3
-                    },
-                    // 需要兼容的js平台
-                    targets: {
-                      chrome: '60',
-                      firefox: '60',
-                      ie: '9',
-                      safari: '10',
-                      edge: '17'
-                    }
-                  }]
-              ]
-            }
+            use: [
+              'thread-loader',
+              {
+                loader: 'babel-loader',
+                options: {
+                  cacheDirectory: true,
+                  presets: [
+                    ['@babel/preset-env',
+                      {
+                        // 按需加载babel的polyfill
+                        useBuiltIns: 'usage',
+                        corejs: {
+                          version: 3
+                        },
+                        // 需要兼容的js平台
+                        targets: {
+                          chrome: '60',
+                          firefox: '60',
+                          ie: '9',
+                          safari: '10',
+                          edge: '17'
+                        }
+                      }]
+                  ]
+                }
+              }
+            ]
           }
         ]
       },

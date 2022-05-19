@@ -8,18 +8,18 @@ body {
 #root {
   background: rgb(224, 246, 253);
   padding: 0px;
-  /* background-image: url('./carbon.png'); */
+  background-image: url('./carbon.png');
   background-size: cover;
   display: flex;
   backface-visibility: hidden;
 }
 
-@font-face {
+/* @font-face {
   font-family: "iconfont";
   src: url('iconfont.woff2?t=1652007286504') format('woff2'),
     url('iconfont.woff?t=1652007286504') format('woff'),
     url('iconfont.ttf?t=1652007286504') format('truetype');
-}
+} */
 
 .iconfont {
   font-family: "iconfont" !important;

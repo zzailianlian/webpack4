@@ -1,6 +1,6 @@
 import $ from 'jquery'
-import '../css/content.less';
-import '../css/index.css';
+import '../css/content';
+import '../css/index';
 // import '../css/childCss/childcss.css'
 import './childJs/childjs';
 // import { multiple } from './b';
@@ -14,7 +14,7 @@ console.log('test2.js  / getNewArr ', getNewArr())
 document.querySelector('.btn').addEventListener('click', function () {
   // 预加载，当浏览器空闲了偷偷加载文件，然后等点击的时候取已经加载好的缓存，再触发then的回调
   // import('./b.js').then(res => {
-  import(/* webpackChunkName:'bb',webpackPrefetch:true */'./b.js').then(res => {
+  import(/* webpackChunkName:'bb',webpackPrefetch:true */'./b').then(res => {
     console.log('动态架子啊成功', res)
   }).catch(err => {
     console.log('记载失败', err)

@@ -246,6 +246,18 @@ module.exports = {
       })
     ]
   },
+  resolve: {
+    // 配置省略文件路径的后缀名
+    extensions: ['.js', '.json', '.css', '.less'],
+    // 配置解析模块路径的别名
+    // 优点：书写方便
+    // 缺点：在编辑器中路径没有提示
+    alias: {
+      '@': resolve(__dirname, 'src')
+    },
+    // 告诉webpack解析模块是找哪个目录，一般都要有个兜底的 'node_modules'，以免前面自己写的路径找不到，还可以走webpack默认的寻找路径
+    modules: [resolve(__dirname, 'node_modules'), 'node_modules'],
+  },
   devServer: {
     contentBase: resolve(__dirname, 'dist'),
     // 开启gzip压缩

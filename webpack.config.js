@@ -6,6 +6,8 @@ const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plug
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const WorkboxWebpackPlugn = require('workbox-webpack-plugin');
 const AddAssetHtmlWebpackPlugin = require('add-asset-html-webpack-plugin');
+const TerserWebpackPlugin = require('terser-webpack-plugin');
+
 
 // 定义node环境 => 其中一个目的是试用合适兼容范围的postcss兼容标准
 process.env.NODE_ENV = 'development';
@@ -229,6 +231,20 @@ module.exports = {
     runtimeChunk: {
       name: (entrypoint) => `runtime- ${entrypoint.name}`,
     },
+    // 需要指定minimize为true，才会启用minimizer的压缩配置
+    minimize: true,
+    minimizer: [
+      // 在webpack4.26.0之前用的是uglyfyjs来进行压缩的，之后都是用terser来进行压缩的
+      // 用来压缩js和css
+      new TerserWebpackPlugin({
+        // 开启缓存
+        cache: true,
+        // 开启多进程打包压缩
+        parallel: true,
+        // 启动source-map
+        sourceMap: true
+      })
+    ]
   },
   devServer: {
     contentBase: resolve(__dirname, 'dist'),

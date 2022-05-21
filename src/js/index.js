@@ -21,9 +21,10 @@ document.querySelector('.btn').addEventListener('click', function () {
   })
 })
 
+// 验证file-loader功能
 // document.querySelector('body').style.backgroundImage = 'url('.concat(backgroundImg, ')');
 
-
+// 验证babel功能
 // const promise = new Promise((resolve, reject) => {
 //   window.setTimeout(() => {
 //     console.log('我是settimtout');
@@ -31,11 +32,12 @@ document.querySelector('.btn').addEventListener('click', function () {
 //   });
 // });
 
+
+// 验证webpack的入口文件编译打包功能
 const a = 'astring';
 function add2(x, y) {
   return x + y;
 }
-
 console.log('add11:11', add2(1, 2));
 console.log('a:', a);
 

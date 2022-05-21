@@ -68,18 +68,6 @@ module.exports = {
               'less-loader',
             ],
           },
-          // {
-          //   test: /\.(png|gif|jpe?g)$/,
-          //   use: {
-          //     loader: 'url-loader',
-          //     options: {
-          //       limit: 8 * 1024,
-          //       name: '[hash:10].[ext]',
-          //       // 针对HTML中的图片资源已commonJs的模块输出导致没办法用url-loader来处理，所以统一都用commonJs模块化来处理图片资源
-          //       esModule: false,
-          //     },
-          //   },
-          // },
           {
             exclude: /\.(js|css|less|html|gif|png|jpe?g)/,
             // exclude: /\.(js|css|less|html|gif|png|jpe?g)/,

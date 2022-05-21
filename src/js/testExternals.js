@@ -1,3 +1,8 @@
+/**
+ * 1、验证webpack的externals功能
+ * 2、验证webpack的dll静态资源引入功能
+ */
+
 import { map } from 'lodash'
 import dayjs from 'dayjs'
 

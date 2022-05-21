@@ -21,7 +21,7 @@ module.exports = {
     // 因为HMR的时候默认通过module.hot.accept来监听，如果每次编译文件名都变的话，就没办法准确监听到accept的文件了
     filename: 'js/[name]_[contenthash].js',
     path: resolve(__dirname, 'dist'),
-    // publicPath: './',
+    publicPath: './',
   },
   module: {
     rules: [
@@ -39,36 +39,19 @@ module.exports = {
       {
         oneOf: [
           {
-            test: /\.css$/,
+            test: /\.(less|css)$/,
             exclude: /node_modules/,
             use: [
-              // 将js中的样式css代码已style标签的形式内联到html中，本身和miniCssExtractPlugin的作用冲突，二者只可取其一
-              // 建议开发环境使用style-loader,一方面打包不用抽离，打包更快，第二方面是用style-loader的话可以让样式文件使用HMR功能
               // 'style-loader',
-              // miniCssExtractPlugin将css文件抽离成单独的css文件
-              MiniCssExtractPlugin.loader,
-              'css-loader',
               {
-                // css的兼容，需要用到postcss，可以与package.json的browerslist相互配合使用
-                loader: 'postcss-loader',
+                loader: MiniCssExtractPlugin.loader,
                 options: {
-                  ident: 'postcss',
-                  plugins: [
-                    // 预设一个兼容标准，更多配置详情依据package.json的browerslist，
-                    // browerslist设置了开发环境和生产环境的兼容标准，这个根据process.env.NODE_ENV来判断
-                    // eslint-disable-next-line no-new-require,new-cap
-                    (new require('postcss-preset-env'))(),
-                  ],
-                },
+                  // 这里的publicPath跟插件中输出的css资源文件路径对标，
+                  // MiniCssExtractPlugin会在提取的css文件时将文件中的
+                  // 图片或其他资源的相对路径前拼接上loader中的publicPath
+                  publicPath: '../'
+                }
               },
-            ],
-          },
-          {
-            test: /\.less$/,
-            exclude: /node_modules/,
-            use: [
-              // 'style-loader',
-              MiniCssExtractPlugin.loader,
               'css-loader',
               {
                 loader: 'postcss-loader',
@@ -83,8 +66,31 @@ module.exports = {
               'less-loader',
             ],
           },
+          // {
+          //   test: /\.(png|gif|jpe?g)$/,
+          //   use: {
+          //     loader: 'url-loader',
+          //     options: {
+          //       limit: 8 * 1024,
+          //       name: '[hash:10].[ext]',
+          //       // 针对HTML中的图片资源已commonJs的模块输出导致没办法用url-loader来处理，所以统一都用commonJs模块化来处理图片资源
+          //       esModule: false,
+          //     },
+          //   },
+          // },
           {
-            test: /\.(png|gif|jpe?g)$/,
+            exclude: /\.(js|css|less|html|gif|png|jpe?g)/,
+            // exclude: /\.(js|css|less|html|gif|png|jpe?g)/,
+            use: {
+              loader: 'file-loader',
+              options: {
+                outputPath: 'media',
+                // publicPath: '../media',
+              },
+            },
+          },
+          {
+            test: /\.(gif|png|jpe?g)/,
             use: {
               loader: 'url-loader',
               options: {
@@ -92,26 +98,8 @@ module.exports = {
                 name: '[hash:10].[ext]',
                 // 针对HTML中的图片资源已commonJs的模块输出导致没办法用url-loader来处理，所以统一都用commonJs模块化来处理图片资源
                 esModule: false,
-                outputPath: 'img',
-              },
-            },
-          },
-          // {
-          //   exclude: /\.(js|css|less|html|gif|png|jpe?g)/,
-          //   // exclude: /\.(js|css|less|html|gif|png|jpe?g)/,
-          //   use: {
-          //     loader: 'file-loader',
-          //     options: {
-          //       outputPath: 'media',
-          //     },
-          //   },
-          // },
-          {
-            test: /\.(gif|png|jpe?g)/,
-            use: {
-              loader: 'file-loader',
-              options: {
-                outputPath: 'img',
+                outputPath: 'img2',
+                // publicPath: '../img',
               },
             },
           },
@@ -239,7 +227,7 @@ module.exports = {
     // 整个a文件，这就得不偿失了。所以就引入了runtimeChunk这样的包，来做依赖包之间的映射，只要key-value的map
     // 关系不变，那么无论b如何变化，都不会影响到a文件
     runtimeChunk: {
-      name: (entrypoint) => `runtime-${entrypoint.name}`,
+      name: (entrypoint) => `runtime- ${entrypoint.name}`,
     },
   },
   devServer: {
@@ -247,7 +235,7 @@ module.exports = {
     // 开启gzip压缩
     compress: true,
     // open: true,
-    hot: true,
+    // hot: true,
     port: 5000,
     // quiet: true,
     // watchContentBase: true,

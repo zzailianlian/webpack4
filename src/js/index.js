@@ -1,6 +1,8 @@
 import $ from 'jquery'
 import '../css/content.less';
 import '../css/index.css';
+// import '../css/childCss/childcss.css'
+import './childJs/childjs';
 // import { multiple } from './b';
 import { getNewArr } from './testExternals';
 // import backgroundImg from '../css/223.png';

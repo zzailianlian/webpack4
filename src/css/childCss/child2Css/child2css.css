@@ -1,0 +1,8 @@
+.child2css{
+  background-image: url(../../../assets/12313.png);
+  width: 100px;
+  height: 100px;
+  background-size: contain;
+  background-color: red;
+  position: fixed;
+}

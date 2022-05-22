@@ -247,14 +247,34 @@ module.exports = {
     modules: [resolve(__dirname, 'node_modules'), 'node_modules'],
   },
   devServer: {
+    // 一般设置为我们项目build的路径
     contentBase: resolve(__dirname, 'dist'),
+    // 监听 contentBase 的文件改变，如果改变就触发 reload
+    // watchContentBase: true,
     // 开启gzip压缩
     compress: true,
+    // 在开启devserver的时候自动打开浏览器
     // open: true,
+    // 是否支持启用HMR
     // hot: true,
+    // 启用的服务器端口号
     port: 5000,
+    // 除了依稀而基本启动信息以外，其他的内容都不要显示
     // quiet: true,
-    // watchContentBase: true,
+    // 不要显示启动服务器日志信息；那基本上开启了quiet和clientLogLevel之后，控制台就只有最初开启时显示的服务器信息了。之后编译的信息都一概不会被打印到控制台
     // clientLogLevel: 'none'
+    // 如果出错了，不要全屏提示
+    // overlay: false,
+    // 服务器代理，用来解决开发环境跨域问题
+    proxy: {
+      // 一旦devServer(5000)服务器接收到 /api/xxx 的请求，就会把请求转发到另外一个服务器(3000)
+      'api': {
+        target: 'http://localhost:3000',
+        // 发送请求时，请求路径重写，将 /api/xxx ---> /xxx （去掉/api）
+        pathRewrite: {
+          '^/api': ''
+        }
+      }
+    }
   },
 };
